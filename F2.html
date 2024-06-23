@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ship Design Project</title>
+  <!-- Inclure Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <!-- Inclure le fichier CSS externe -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <!-- File input pour sélectionner le fichier JSON -->
+  <label for="fileInput">Upload a JSON file:</label>
+  <input type="file" id="fileInput" accept=".json" title="Select a file">
+
+  <!-- Phrase "Number of points" -->
+  <p class="centered-text">Number of points</p>
+
+  <!-- Conteneur pour le slider et le champ de texte -->
+  <div class="PB-range-slider-container">
+    <!-- Slider -->
+    <input type="range" min="0" max="100" value="11" class="PB-range-slider" id="myRange">
+    <!-- Champ de texte -->
+    <input type="number" min="0" max="100" value="11" id="pointsInput" class="PB-range-slider-input"
+      placeholder="Points number">
+    <!-- Affichage du nombre minimum de points -->
+    <p class="centered-text" id="minPointsText">Minimum points: 0</p>
+    <button id="togglePointsButton">Toggle Points</button>
+    <button id="toggleLegendButton">Show/Hide Legend</button>
+    <button id="toggleReverseButton">Reverse Body Plan</button>
+  </div>
+
+
+  <div class="charts-container">
+    <div class="chart-item">
+        <canvas id="HalfBreathChart"></canvas>
+    </div>
+    <div class="chart-item" id="shearPlanContainer">
+    </div>
+</div>
+
+  <div class="BodyChart-container">
+      <canvas id="BodyPlanChart"></canvas>
+  </div>
+
+  <!-- Script JavaScript -->
+  <script src="ChartFunction.js"></script>
+  <script src="F2.js"></script>
+</body>
+
+</html>
