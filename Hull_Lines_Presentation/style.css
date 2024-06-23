@@ -1,0 +1,194 @@
+#page {
+    margin-left: 20%;
+    margin-right: 20%;
+    height: 100%;
+    border: 1px solid black;
+}
+
+div {
+    margin: 20px;
+    text-align: justify;
+}
+
+#writers {
+    float: right;
+    font-weight: bold;
+}
+
+#introduction {
+    margin-top: 100px;
+}
+
+#JSON_Content {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+#Img_JSON {
+    width: 100px;
+    display: block;
+    margin: 0 auto;
+}
+
+#Offsets_Table_Content {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+#Img_Offsets {
+    width: 650px;
+    height: 300px;
+    display: block;
+    margin: 0 auto;
+}
+
+#Half_Breadth_Plan_Content {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+#Img_HalfBreadth {
+    width: 800px;
+    height: 200px;
+    display: block;
+    margin: 0 auto;
+}
+
+
+#Sheer_Plan_Content {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+#Img_Sheer {
+    width: 800px;
+    height: 200px;
+    display: block;
+    margin: 0 auto;
+}
+
+#Body_Plan_Content {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+#Img_Body {
+    display: block;
+    margin: 0 auto;
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    height: 80%;
+    overflow: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+@media screen and (max-width: 767px) {
+    #page {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    div {
+        margin: 10px;
+        font-size: 10px;
+    }
+
+    #introduction {
+        margin-top: 50px;
+    }
+
+    mi {
+        font-size: 10px;
+    }
+
+    math {
+        margin-right: 20px;
+    }
+
+    #Img_Ship_Buttockline {
+        width: 200px;
+        margin-left: 18%;
+    }
+
+    #Img_Ship_Waterline {
+        width: 200px;
+        margin-left: 18%;
+    }
+
+    #Img_Ship_Values {
+        width: 200px;
+        margin-left: 18%;
+    }
+
+    #Coeff_Values .coeff {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    #Gravity_Center {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    #Buoyancy_Center {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    button {
+        width: 150px;
+        height: 30px;
+        font-size: 10px;
+    }
+
+    input {
+        font-size: 10px;
+    }
+}

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang=fr>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Presentation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div id="page">
+    <h1>
+      <center>Ship Lines Plan </br>Drawing Functions</center>
+    </h1>
+
+    <div id="writers">Maxime Albouy </br>
+      Engineering school student at SeaTech - Intern at NTNU </br>
+      Supervised by Henrique Murilo Gaspar - April to June 2024
+    </div></br>
+
+    <div id="introduction">
+      <h2>Introduction</h2>
+      <p>During my internship at NTNU, I had the opportunity to work on an project involving the development of
+        JavaScript functions for visualizing various plans useful for studying a ship's hull.
+        This project allowed me to delve deeply into the technical aspects of naval design and put my programming skills
+        into practice.</p>
+      <p>This page aims to present the result of this work by showcasing the different functions I developed and their
+        usage. These functions are designed to utilize data contained in JSON files describing ship characteristics.</p>
+      This file contains all the information about the ship studied. To use the examples that follow, you can download
+      any JSON file using the link then import the file below.
+      By default, the charts will be displayed using the JSON file of a Yard patrol craft ship.</p>
+      <center><a href="https://github.com/shiplab/vesseljs/tree/dev/examples/ship_specs" target="_blank">Ship specs
+          examples</a>
+      </center>
+      </br>
+      <center><input type="file" id="fileInput" accept=".json" title="Select a file"></center></br>
+      <p>The JSON file that we use is seen as a java object. Literally JavaScript Object Notation (JSON), here our
+        object is a ship so it has properties such as the speed, the length and width of the boat, its capacity...</p>
+      <p>But also and above all informations on its hull. Which can be found in the “structure” then “hull” property of
+        our JSON
+        file. And it is in this part of the file that we find the values ​​of the offsets table.</p>
+
+      <div id="JSON_Content">
+        <img src="Img/json.svg" id="Img_JSON">
+        <p><u>Figure No. 1: JSON file representation. <a href="https://www.svgrepo.com/svg/74933/json-file"
+              target="_blank">[1]</a></u> </p>
+      </div>
+
+    </div>
+
+    <div id="Offset_Table">
+      <h2>I] Offsets Table</h2>
+      <p>The offset table is a table that helps describe the shape of a ship's hull in three dimensions.It's devided in
+        two parts.</p>
+
+      <p><b>Parts of the table of offsets :</b></p>
+
+      <p><u>Half Breadth :</u><br>
+
+        Half Breadth refer to the horizontal distances between the ship's centerline (longitudinal center) and the
+        exterior surface of the hull at different stations and waterlines. This part of the offset table describes the
+        lateral shape of the hull. These lines are used to draw the half Breadths plan and the body plan.</p>
+
+      <p><u>Heights :</u><br>
+
+        Heights refer to the vertical distances from the base plane of the ship (often the keel) to the outer surface of
+        the hull at various stations and buttock lines. This part of the offset table describes the vertical shape of
+        the hull. These lines are used to draw the sheer plan</p>
+
+      <p><b>Content of the table of offsets :</b></p>
+
+      <p><u>In Column, Stations: </u><br>
+
+        The columns represent stations, which are vertical cross sections of the hull at different points along the
+        length of the ship.</p>
+
+      <p><u>Waterlines in Lines:</u><br>
+
+        Waterlines represent horizontal levels on the hull, measured at various heights from the keel or bottom of the
+        ship. They are often spaced at regular intervals, such as every foot or meter.</p>
+
+      <p><u>Buttocklines:</u><br>
+
+        Buttock lines are vertical lines parallel to the centerline of the ship, taken at regular intervals on either
+        side of this line. They make it possible to describe the longitudinal shape of the hull in terms of height.</p>
+
+
+      <div id="Offsets_Table_Content">
+        <img src="Img/Offsets_Table.jpg" id="Img_Offsets">
+        <p><u>Figure No. 2: Table of offsets. <a href="https://www.loc.gov/resource/hhh.ca1506.sheet/?sp=4&st=image"
+              target="_blank">[2]</a></u> </p>
+      </div>
+
+    </div> </br>
+
+    <div id="HalfBreadthPlan">
+      <h2>II] Half Breadth Plan</h2>
+      <p>The Half Breadth Plan is an essential representation in marine construction, describing the lateral shape of
+        the hull by half-breadths measured at specific stations and waterlines. It is crucial for the precise design,
+        construction and verification of hull form, ensuring that the vessel has the desired characteristics in terms of
+        performance and stability.</p>
+      </br>
+      <div id="Half_Breadth_Plan_Content">
+        <img src="Img/halfBreadthPlan.png" id="Img_HalfBreadth">
+        <p><u>Figure No. 3: Balclutha Half Breadth Plan. <a
+              href="https://fr.m.wikipedia.org/wiki/Fichier:Perspective_views,_Body_Plan,_Sheer_Plan,_and_Half-Breadth_Plan_-_Ship_BALCLUTHA,_2905_Hyde_Street_Pier,_San_Francisco,_San_Francisco_County,_CA_HAER_CAL,38-SANFRA,200-_%28sheet_1_of_1%29.png"
+              target="_blank">[3]</a></u> </p>
+      </div>
+      <p>To draw this chart on an html page, I went through a JS script that uses the chart.js library. With this
+        library we can create a modular graph, thanks to different properties. Of course first of all the abscissas and
+        ordinates, but also the legend, the labels of the axes, properties of the plot, display or not the points on the
+        plot, title and the fact that it is responsive or not.</br></br></p>
+
+
+      <p>You can click the following button to display the Half Breadth Plan of your ship.</p>
+      <button id="Button_HalfBreadth">Half Breadth</button>
+
+      <!-- Modale -->
+      <div id="halfBreadthModal" class="modal">
+        <div class="modal-content">
+          <span id="closeModalHalfBreadth" class="close">&times;</span>
+          <canvas id="HalfBreadthChart"></canvas>
+        </div>
+      </div>
+
+
+
+    </div></br></br>
+
+    <div id="Sheer">
+      <h2>III] Sheer Plan</h2>
+      <p>The sheer plan, also called a profile plan or longitudinal elevation plan, is an essential technical drawing in
+        shipbuilding. It represents the side (profile) view of a ship. This plan shows the outline and main lines of the
+        ship as they appear when viewed from the side, from bow to stern.</p>
+
+      <div id="Sheer_Plan_Content">
+        <img src="Img/SheerPlan.png" id="Img_Sheer">
+        <p><u>Figure No. 4: Balclutha Sheer Plan. <a
+              href="https://fr.m.wikipedia.org/wiki/Fichier:Perspective_views,_Body_Plan,_Sheer_Plan,_and_Half-Breadth_Plan_-_Ship_BALCLUTHA,_2905_Hyde_Street_Pier,_San_Francisco,_San_Francisco_County,_CA_HAER_CAL,38-SANFRA,200-_%28sheet_1_of_1%29.png"
+              target="_blank">[4]</a></u> </p>
+      </div>
+
+      <p>You can click the following button to display the Sheer Plan of your ship.</p>
+      <button id="Button_Sheer">Sheer Plan</button>
+      
+      <!-- Modale -->
+      <div id="SheerModal" class="modal">
+        <div class="modal-content">
+          <span id="closeModalSheer" class="close">&times;</span>
+          <canvas id="SheerPlanChart"></canvas>
+        </div>
+      </div>
+
+
+    </div> </br></br>
+
+
+    <div id="Body">
+      <h2>IV] Body Plan</h2>
+      <p>The body plan, also called cross-section plan or template plan, is another essential technical drawing in
+        shipbuilding. It represents the cross sections of a ship's hull, viewed from the front (bow) and rear (stern).
+        This plan shows the shape and contours of the hull at different positions along the length of the ship.</p>
+
+      <div id="Body_Plan_Content">
+        <img src="Img/BodyPlan.png" id="Img_Body">
+        <p><u>Figure No. 5: Balclutha Body Plan. <a
+              href="https://fr.m.wikipedia.org/wiki/Fichier:Perspective_views,_Body_Plan,_Sheer_Plan,_and_Half-Breadth_Plan_-_Ship_BALCLUTHA,_2905_Hyde_Street_Pier,_San_Francisco,_San_Francisco_County,_CA_HAER_CAL,38-SANFRA,200-_%28sheet_1_of_1%29.png"
+              target="_blank">[5]</a></u> </p>
+      </div>
+
+      <p>You can click the following button to display the Body Plan of your ship.</p>
+      <button id="Button_Body">Body Plan</button>
+      
+      <!-- Modale -->
+      <div id="BodyModal" class="modal">
+        <div class="modal-content">
+          <span id="closeModalBody" class="close">&times;</span>
+          <canvas id="BodyPlanChart"></canvas>
+        </div>
+      </div>
+
+
+    </div> </br></br>
+
+
+    <div id="Conclusion">
+      <h2>Conclusion</h2>
+      <p>The functions presented allow for the calculation of characteristic values of a boat's hull based on data
+        present in a JSON file. The coefficient values could not be verified, and the quality of the results greatly
+        depends on the accuracy of the HalfBreadths table. The more points provided, the more accurate the calculations
+        will be.</br>
+        However, if the Draft value lies between two waterlines, a new waterline is created by interpolation. This helps
+        to make
+        the values of the submerged volume, Cw, and the coordinates of the Buoyancy point more accurate.</p>
+    </div></br>
+
+    <div id="Webography">
+      <h2>Webography</h2>
+      <p>[1] <a href="https://steeringoar.wordpress.com/2017/02/19/interpreting-the-lines-plan/"
+          target="_blank">Interpreting the Lines Plan</a></p>
+    </div>
+
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="ChartFunction.js"></script>
+  <script src="script.js"></script>
+
+
+
+</body>
