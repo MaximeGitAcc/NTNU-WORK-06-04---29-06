@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Ship Motion Application</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="css/style.css" rel="stylesheet"> -->
+
+
+    <!-- Wave Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="WaveFunction.js" defer></script>
+
+    <!-- Wind Roses-->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="WindRoseMonthFunction.js" defer></script>
+    <script src="WindRoseDailyFunction.js" defer></script>
+
+
+</head>
+
+<body>
+
+    <style>
+        input {
+            accent-color: rgb(9, 56, 225);
+        }
+
+        html,
+        body {
+            height: 100%;
+            zoom: 110%;
+        }
+
+        body {
+            transform: scale(0.67);
+            transform-origin: center center;
+        }
+
+        h1 {
+            margin-top: -70px;
+            margin-bottom: 50px;
+        }
+
+        .col-md-6 {
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .col-md-12 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .text-wrapper {
+            height: 200px;
+        }
+
+        .input-wrapper {
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            /* Alignement au début pour l'espace entre le texte et l'input */
+            flex-direction: column;
+        }
+
+        .input-container {
+            text-align: center;
+            margin-left: 180px;
+            margin-top: 20px;
+            /* Marge entre le texte et l'input */
+        }
+
+        .table-container {
+            width: 400px;
+            height: 300px;
+            overflow: auto;
+            border: 1px solid black;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 1;
+        }
+
+
+        @media screen and (max-width: 767px) {
+
+            html,
+            body {
+                overflow-x: hidden;
+            }
+
+            body {
+                margin-left: 20px;
+                transform: scale(1);
+
+            }
+
+            h1 {
+                margin-top: 10px;
+            }
+        }
+
+        #graphbutton {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #graphbutton li {
+            margin-right: 2rem;
+            float: left;
+        }
+
+        #graphsList {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #graphsList li {
+            float: left;
+            width: 50%;
+            /* Each li takes half the width */
+        }
+
+        .graph-container {
+            display: flex;
+            align-items: flex-start;
+            /* Align items at the start of the container */
+            padding: 10px;
+            /* Adjust padding as needed */
+        }
+
+        #DailyGraph {
+            width: 600px;
+            height: 600px;
+            display: none;
+        }
+
+        #slider-container {
+            position: relative;
+            /* Assurez-vous que le conteneur est positionné */
+            width: 100%;
+            /* Ajustez la largeur selon vos besoins */
+            margin-top: 10px;
+            /* Marge supérieure pour l'espacement */
+        }
+
+        #slider {
+            width: 100%;
+            /* Assurez-vous que le slider occupe toute la largeur du conteneur */
+        }
+
+        #sliderValue {
+            text-align: center;
+            /* Centrez le texte du slider */
+            margin-top: 5px;
+            /* Marge supérieure pour l'espacement */
+        }
+
+        /* Style the buttons that are used to open and close the accordion panel */
+        .accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: 0.4s;
+        }
+
+        /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+        .active,
+        .accordion:hover {
+            background-color: #ccc;
+        }
+
+        /* Style the accordion panel. Note: hidden by default */
+        .panel {
+            padding: 0 18px;
+            background-color: white;
+            display: none;
+            overflow: hidden;
+        }
+
+        .accordion:after {
+            content: '\02795';
+            /* Unicode character for "plus" sign (+) */
+            font-size: 13px;
+            color: #777;
+            float: right;
+            margin-left: 5px;
+        }
+
+        .active:after {
+            content: "\2796";
+            /* Unicode character for "minus" sign (-) */
+        }
+    </style>
+
+    <!-- Page Content -->
+
+    <!-- Container creates the space -->
+    <div class="container">
+
+        <!-- Row creates horizontal groups of columns -->
+        <div class="row">
+
+            <!-- choose horizontal layout in https://www.w3schools.com/bootstrap/bootstrap_grid_examples.asp-->
+
+            <!-- No divisions in page. Only 1 column. -->
+            <div class="col-md-12 text-center">
+                <h1>Wave Ploting based on CSV File</h1>
+                <div align="right">
+                    <p style="width:80%" align="right"> by <strong><a
+                                href="https://www.linkedin.com/in/maxime-albouy-marida/?originalSubdomain=fr"
+                                target="_blank">Maxime Albouy</a></strong><br>Engineering school students at SeaTech -
+                        Intern at NTNU <br>Supervised by Henrique Murilo Gaspar - April to June 2024</p>
+                </div>
+            </div>
+
+            <br><br><br>
+            <div class="row" style="margin-top: 100px;">
+                <div class="col-md-6" style="display: flex; justify-content: center; align-items: center;">
+                    <div class="col-md-12 text-wrapper">
+                        <p style="color:black; text-align: justify; font-size: 18px;">
+                            This work was carried out during a 3-month internship at NTNU University in Ålesund. It
+                            allows you to visualize the height of different types of waves (wind and swell) from crest
+                            to trough.
+                            I drew graphs representing a Wind Rose indicating the direction of the waves as well as
+                            their height. These charts can be
+                            displayed monthly as well as daily using a date picker. Knowing that the values ​are taken
+                            once every hour per day, therefore 24/day. Wind roses use the
+                            direction and height of the combined wind and swell waves.
+                            <br>
+                            To use this page, I invite you to enter a file with wave data or use the table named "WavesData.csv" <a href="WaveDatas.csv" download="WaveDatas.csv">here</a>.
+                            entered.<br>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6" style="display: flex; justify-content: center; align-items: center;">
+                    <div class="col-md-12 input-wrapper">
+                        <div class="input-container">
+                            <p style="color:black; text-align: center; font-size: 18px; margin-top: 90px;">
+                                Import Dataset
+                                <input type="file" id="fileInput" accept=".csv" style="margin-top: 10px;"><br>
+                            </p>
+                            <div id="table-container" class="table-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br><br><br>
+
+            <div class="row" style="margin-top: 100px">
+
+                <br>
+                <br>
+                <br>
+                <h1>Waves informations :</h1>
+
+                <h2>Waves plot</h2>
+                <br>
+                <p>Wave Amplitude: <input type="text" id="wave_amplitude" oninput="calculate_all()"></p>
+                <button id="pauseButton">Pause</button>
+                <br>
+                <canvas id="waveChart" width="200" height="100"></canvas>
+
+                <h2>Monthly Wave Rose</h2>
+                <br>
+                <ul id="graphbutton">
+                    <li>
+                        <button id="montWindRoseButton">Show Monthly Wind Rose</button>
+                    </li>
+                    <li>
+                        <button id="dayWindRoseButton">Show Day Wind Rose</button>
+                    </li>
+                </ul>
+
+                <br />
+
+                <ul id="graphsList">
+                    <li>
+                        <button id="legendButton" style="display:none;">Show/Hide Legend</button>
+                        <div id="monthlyGraph" style="width: 600px; height: 600px; display:none;"></div>
+                    </li>
+
+                    <li>
+                        <input type="date" id="start" name="trip-start" value="2022-07-12" min="2022-07-12"
+                            max="2022-07-30" style="display:none;" />
+                        <div class="slider-container">
+                            <input class="slider" type="range" id="slider" min="0" max="3" step="1" value="45"
+                                style="display: none; color:blue;">
+                            <span id="sliderValue" class="slider-value" style="display: none;">5°</span>
+                        </div>
+                        <br />
+                        <div class="graph-container">
+                            <div id="DailyGraph"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <br>
+        <button class="accordion" style="margin-bottom: 10px;">Click to Read the Explanation </button>
+        <div class="panel">
+
+
+            <!-- Another horizontal group. Not necessary, but could help in order to separate the columns. -->
+            <div class="row">
+
+                <div class="col-md-12 text-left">
+                    <h2 align="left"> Wave heights explanation : </h2>
+                    <br>
+                    <p align="left"><strong>Still waterline (m):</strong> The water level without waves, measured from
+                        the surface.</p>
+                    <p align="left"><strong>Amplitude (m):</strong> Half the vertical distance between the trough and
+                        crest of a wave.</p>
+                    <p align="left"><strong>Wave length (m):</strong> The horizontal distance between two successive
+                        crests or two successive troughs of a wave.</p>
+                    <p align="left"><strong>Wave height (m):</strong> The vertical distance between the crest and trough
+                        of a wave.</p>
+                    <p align="left"><strong>Trough :</strong> The lowest point of a wave.</p>
+                    <p align="left"><strong>Crest :</strong> The highest point of a wave.</p>
+                    <p align="left"><strong>Direction of propagation (° or Cardinal Directions): </strong> The direction
+                        in which the wave is moving.</p>
+                    <p align="left"><strong>Water depth (m):</strong> The vertical distance between the water surface
+                        and the seabed at a particular location</p>
+
+                    <p align="left"> <img src="ExplicationWavesHeights.png" class="img-responsive"></p>
+                    <p><em>Explanation of Wave Height in the Nearshore Marine Forecast </em><a
+                            href="https://www.weather.gov/dlh/WaveHeightExplanation"> [1]</a></p>
+                </div>
+
+                <div class="col-md-12 text-left">
+                    <br>
+                    <h2 align="left"> Wave Rose explanation : </h2>
+                    <br>
+                    <p align="left"><strong>North (N):</strong> From 0 to 22.5 degrees and from 337.5 to 360 degrees.
+                    </p>
+                    <p align="left"><strong>Northeast (NE):</strong> From 22.5 to 67.5 degrees.</p>
+                    <p align="left"><strong>East (E):</strong> From 67.5 to 112.5 degrees.</p>
+                    <p align="left"><strong>Southeast (SE):</strong> From 112.5 to 157.5 degrees.</p>
+                    <p align="left"><strong>South (S):</strong> From 157.5 to 202.5 degrees.</p>
+                    <p align="left"><strong>Southwest (SW):</strong> From 202.5 to 247.5 degrees.</p>
+                    <p align="left"><strong>West (W)</strong> From 247.5 to 292.5 degrees.</p>
+                    <p align="left"><strong>Northwest (NW):</strong> From 292.5 to 337.5 degrees.</p>
+                    <p align="left"> <img src="WindRoseExplanation.jpg" class="img-responsive" width="500" height="300">
+                    </p>
+                    <p><em>Explanation of Wave Rose directions </em><a
+                            href="https://stock.adobe.com/ch_fr/images/compass-rose-with-eight-principal-winds-sometimes-called-wind-rose-rose-of-the-winds-or-compass-star-figure-used-to-display-the-orientation-of-the-cardinal-directions-and-their-intermediate-points/577497725">
+                            [2]</a></p>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+
+    </div>
+    <!-- /.container -->
+
+
+    <!-- Insert own scripts here -->
+    <!--Script for using flot graphics -->
+
+    <script language="javascript" type="text/javascript" src="jquery-1.11.3.min.js"></script>
+    <script language="javascript" type="text/javascript" src="flot/jquery.flot.min.js"></script>
+
+    <!--Java script CORE -->
+
+    <script>
+
+
+        var Wave_Amplitude = [0];
+        document.addEventListener("DOMContentLoaded", function () {
+            function updateAmplitude() {
+                var absoluteAmplitude = Math.abs(WaveFunction_Amplitude);
+                document.getElementById('wave_amplitude').value = absoluteAmplitude;
+                Wave_Amplitude = absoluteAmplitude;
+            }
+
+            // Appeler updateAmplitude chaque seconde pour mettre à jour la valeur
+            setInterval(updateAmplitude, 1000);
+        });
+
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                // Toggle between adding and removing the "active" class, to highlight the button that controls the panel
+                this.classList.toggle("active");
+
+                // Toggle between hiding and showing the active panel
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                    // Scroll the page down by 100 pixels (you can adjust this value as needed)
+                    window.scrollBy({
+                        top: window.innerHeight - 70, // Adjust this value to change the scroll amount
+                        behavior: 'smooth' // Smooth scrolling
+                    });
+                }
+            });
+        }
+
+
+        document.getElementById('fileInput').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const text = e.target.result;
+                    displayCSVTable(text);
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function displayCSVTable(csv) {
+            const rows = csv.split('\n');
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+
+            rows.forEach((row, rowIndex) => {
+                const cols = row.split(',');
+                const tr = document.createElement('tr');
+
+                cols.forEach((col) => {
+                    const cell = rowIndex === 0 ? document.createElement('th') : document.createElement('td');
+                    cell.textContent = col.trim();
+                    tr.appendChild(cell);
+                });
+
+                if (rowIndex === 0) {
+                    thead.appendChild(tr);
+                } else {
+                    tbody.appendChild(tr);
+                }
+            });
+
+            table.appendChild(thead);
+            table.appendChild(tbody);
+
+            const tableContainer = document.getElementById('table-container');
+            tableContainer.innerHTML = '';
+            tableContainer.appendChild(table);
+        }
+
+
+    </script>
+
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+
+
+</body>
+
+</html>

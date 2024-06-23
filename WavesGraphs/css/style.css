@@ -1,0 +1,190 @@
+input {
+    accent-color: black;
+}
+
+html,
+body {
+    height: 100%;
+    zoom: 110%;
+}
+
+body {
+    transform: scale(0.67);
+    transform-origin: center center;
+}
+
+h1 {
+    margin-top: -70px;
+    margin-bottom: 50px;
+}
+
+.col-md-6 {
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.col-md-12 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.text-wrapper {
+    height: 200px;
+}
+
+.input-wrapper {
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* Alignement au début pour l'espace entre le texte et l'input */
+    flex-direction: column;
+}
+
+.input-container {
+    text-align: center;
+    margin-left: 180px;
+    margin-top: 20px;
+    /* Marge entre le texte et l'input */
+}
+
+.table-container {
+    width: 400px;
+    height: 300px;
+    overflow: auto;
+    border: 1px solid black;
+    margin-top: 20px;
+    position: relative;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+}
+
+#DailyGraph {
+    width: 600px;
+    height: 600px;
+    display: none;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.slider {
+    transform: rotate(270deg);
+    /* Rotate the element */
+    margin-left: 20px;
+}
+
+.slider-value {
+    margin-left: 80px;
+}
+
+@media screen and (max-width: 767px) {
+
+    html,
+    body {
+        overflow-x: hidden;
+    }
+
+    body {
+        margin-left: 20px;
+        transform: scale(1);
+
+    }
+
+    h1 {
+        margin-top: 10px;
+    }
+}
+
+#graphbutton {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#graphbutton li {
+    margin-right: 2rem;
+    float: left;
+}
+
+#graphsList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#graphsList li {
+    float: left;
+}
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active,
+.accordion:hover {
+    background-color: #ccc;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+    padding: 0 18px;
+    background-color: white;
+    display: none;
+    overflow: hidden;
+}
+
+.accordion:after {
+    content: '\02795';
+    /* Unicode character for "plus" sign (+) */
+    font-size: 13px;
+    color: #777;
+    float: right;
+    margin-left: 5px;
+}
+
+.active:after {
+    content: "\2796";
+    /* Unicode character for "minus" sign (-) */
+}
